@@ -1,4 +1,4 @@
-# <img src="https://flagcdn.com/w40/ve.png" width="30"> Sabor Binacional <img src="https://flagcdn.com/w40/co.png" width="30"> Sabor Binacional
+# <img src="https://flagcdn.com/w40/ve.png" width="30"> Sabor Binacional <img src="https://flagcdn.com/w40/co.png" width="30">
 
 **Autor:** Elías José Nieto Urieta  
 **Proyecto:** Ecosistema digital de cultura gastronómica binacional.
