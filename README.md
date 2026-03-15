@@ -1,8 +1,7 @@
-# 🇻🇪 Sabor Binacional 🇨🇴 
+# <img src="https://flagcdn.com/w40/ve.png" width="30"> Sabor Binacional <img src="https://flagcdn.com/w40/co.png" width="30"> Sabor Binacional
 
 **Autor:** Elías José Nieto Urieta  
 **Proyecto:** Ecosistema digital de cultura gastronómica binacional.
-
 ---
 
 ## 📖 Sobre el Proyecto
@@ -42,4 +41,4 @@ El repositorio se organiza de la siguiente manera:
 En cumplimiento con las normas de ética digital, se declara que las representaciones visuales de comensales e ingredientes han sido generadas mediante el modelo **Nano Banana 2**. Esto permite mantener una identidad visual rústica y coherente sin comprometer la privacidad de personas reales.
 
 ## 📜 Licencia y Derechos
-**Todos los derechos reservados.** El código, diseño y contenido narrativo de este sitio son propiedad intelectual de **Elias Nieto**. Este trabajo ha sido realizado exclusivamente con fines académicos y de portafolio personal.
+**Todos los derechos reservados.** El código, diseño y contenido narrativo de este sitio son propiedad intelectual de **Elías Nieto**. Este trabajo ha sido realizado exclusivamente con fines académicos y de portafolio personal.
