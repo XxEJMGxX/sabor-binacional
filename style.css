@@ -1,0 +1,1727 @@
+/* ===========================================================
+ * * SISTEMA DE TOKENS — Variables globales
+ * ! Define la paleta de colores y parámetros principales
+ * =========================================================== */
+:root {
+  --primary-color: #c0392b; /* Tall Poppy */
+  --primary-dark: #a02e22; /* Hover del rojo */
+  --bg-color: #fdf5e6; /* Warm Sand Oficial */
+  --text-color: #1a1a1a;
+  --secondary-text-color: #555555;
+  --card-bg: #ffffff;
+  --border-color: #e5e7eb;
+  --font-main: "Merriweather Sans", sans-serif;
+  --font-display: "Fraunces", serif;
+  --header-height: 64px; /* * Altura reducida en móvil */
+  --transition: 0.3s ease;
+}
+
+/* ===========================================================
+ * * RESET Y BASE
+ * =========================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-color);
+  font-family: var(--font-main);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+/* ===========================================================
+ * * PAGE WRAPPER
+ * =========================================================== */
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ===========================================================
+ * * HEADER Y NAVEGACIÓN — BASE MÓVIL
+ * ? Mobile First: El menú está diseñado por defecto para
+ * ? dispositivos pequeños, con el hamburger visible.
+ * =========================================================== */
+.main-header {
+  /* * Fijamos el header en la parte superior */
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
+  height: var(--header-height);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* * Padding reducido en móvil */
+  padding: 0 1rem;
+  gap: 1rem;
+}
+
+/* * Enlace del logo: imagen + texto en línea */
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.logo img {
+  /* * Logo un poco más pequeño en móvil */
+  max-width: 60px;
+  height: auto;
+  flex-shrink: 0;
+}
+
+/* * Nombre de la marca al lado del logo */
+.logo-text {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-color);
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+/* ===========================================================
+ * * MENÚ MÓVIL (CHECKBOX HACK)
+ * ? Técnica: Usamos un <input type="checkbox"> oculto.
+ * ? Al hacer clic en el <label> (hamburguesa), el checkbox cambia de estado.
+ * ? Usamos el selector de hermanos adyacentes (~) para mostrar el menú 
+ * ? cuando el checkbox está :checked. ¡Cero JavaScript!
+ * =========================================================== */
+.mobile-menu-toggle {
+  display: none; /* ! Oculto porque interaccionamos mediante su <label> */
+}
+
+/* ! La navegación está oculta por defecto en móvil y se vuelve absoluta */
+.navbar {
+  /* En lugar de display: none, usamos visibilidad y opacidad para poder animarlo */
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-15px);
+  position: absolute;
+  top: var(--header-height);
+  left: 0;
+  width: 100%;
+  background-color: var(--primary-color);
+  padding: 2rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* * Lista de navegación vertical en móvil */
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* * Activar menú cuando checkbox está marcado */
+/* * Activar menú cuando checkbox está marcado */
+/* ? Al estar marcado, se vuelve visible, 100% opaco y regresa a su posición original Y=0 */
+.mobile-menu-toggle:checked ~ .main-header .navbar {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Animación del ícono de hamburguesa */
+.mobile-menu-toggle:checked ~ .main-header .hamburger span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.mobile-menu-toggle:checked ~ .main-header .hamburger span:nth-child(2) {
+  opacity: 0;
+}
+.mobile-menu-toggle:checked ~ .main-header .hamburger span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.nav-links a {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #ffffff;
+  padding: 4px 0;
+  position: relative;
+  transition: color var(--transition);
+}
+
+/* ? Subrayado animado al hacer hover sobre los links */
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--primary-color);
+  transition: width var(--transition);
+}
+
+.nav-links a:hover {
+  color: #fcebd7;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+/* ===========================================================
+ * * MENÚ DESPLEGABLE (DROPDOWN)
+ * ? El menú se muestra únicamente cuando se hace hover.
+ * =========================================================== */
+.dropdown {
+  position: relative;
+}
+
+/* * La lista desplegable oculta inicialmente */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--card-bg);
+  min-width: 200px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  padding: 0.5rem 0;
+  border-radius: 8px;
+  z-index: 200;
+  /* * Separación suave para que no quede pegado al texto superior */
+  margin-top: 10px;
+}
+
+/* ! Clases de visibilidad para Mega Menú (Móvil vs Desktop) */
+.desktop-only-menu {
+  display: none !important;
+}
+
+.dropdown-menu li {
+  width: 100%;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 0.5rem 1.25rem;
+  font-family: var(--font-main);
+  font-size: 0.9rem;
+  color: var(--text-color);
+  font-weight: 500;
+  transition:
+    background-color var(--transition),
+    color var(--transition);
+  /* ! Quitamos el subrayado original del menú principal para los sub-items */
+  position: relative;
+}
+
+/* ! Desactivamos el subrayado inferior permanente de los items de adentro */
+.dropdown-menu a::after {
+  display: none !important;
+}
+
+.dropdown-menu a:hover {
+  background-color: #f7f7f7;
+  color: var(--primary-color);
+}
+
+/* * Mostrar el menú al pasar el ratón (Hover) o Focus */
+.dropdown:hover .dropdown-menu,
+.dropdown:focus-within .dropdown-menu {
+  display: block;
+  animation: fadeDropdown 0.3s ease;
+}
+
+@keyframes fadeDropdown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+}
+
+/* * El hamburger se muestra en móvil */
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.hamburger span {
+  display: block;
+  width: 25px;
+  height: 2px;
+  background-color: var(--text-color);
+  border-radius: 2px;
+  transition: var(--transition);
+}
+
+/* ===========================================================
+ * * BOTONES — BASE MÓVIL
+ * =========================================================== */
+.cta-button,
+.cta-button-secondary {
+  display: inline-block;
+  border-radius: 50px;
+  /* * Padding más compacto en móvil */
+  padding: 10px 22px;
+  font-family: var(--font-main);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition);
+  border: 2px solid var(--primary-color);
+}
+
+/* * Botón primario: fondo rojo */
+.cta-button {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+.cta-button:hover {
+  background-color: var(--primary-dark);
+  border-color: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* * Botón secundario: contorno rojo */
+.cta-button-secondary {
+  background-color: transparent;
+  color: var(--primary-color);
+}
+
+.cta-button-secondary:hover {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* ! El botón de contacto solo se muestra en desktop.
+ * ! Esta regla va DESPUÉS de .cta-button-secondary para ganarle en cascada. */
+.desktop-only {
+  display: none;
+}
+
+/* ===========================================================
+ * * SECCIÓN HERO — BASE MÓVIL
+ * =========================================================== */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  /* * Padding vertical reducido en móvil */
+  padding: 3rem 1rem;
+  background: linear-gradient(160deg, var(--bg-color) 60%, #f5d9b0 100%);
+}
+
+.hero-content {
+  max-width: 100%;
+}
+
+.hero-content h1 {
+  font-family: var(--font-display);
+  /* * clamp: mínimo 1.8rem en móvil, máximo 3.5rem en desktop */
+  font-size: clamp(1.8rem, 6vw, 3.5rem);
+  line-height: 1.2;
+  color: var(--text-color);
+  margin-bottom: 1rem;
+}
+
+.hero-content p {
+  font-size: 1rem;
+  color: var(--secondary-text-color);
+  margin-bottom: 1.75rem;
+}
+
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* ===========================================================
+ * * SLIDER DE GALERÍA — Infinite Auto-Play
+ * ! 100% CSS puro sin JavaScript
+ * * Técnica: @keyframes translateX sobre track con imágenes
+ * * originales + duplicadas para un loop seamless en CSS.
+ * =========================================================== */
+.gallery {
+  position: relative;
+  /* * Padding vertical ajustado en móvil */
+  padding: 2rem 0;
+  background-color: #f5d9b0; /* * Color ajustado para integrarse ("seamless") con el hero */
+  overflow: hidden; /* ! Necesario: recorta las imágenes que se salen del ancho de la pantalla */
+}
+
+/* * Ventana visible — misma idea que overflow: hidden en el wrapper */
+.slider-overflow {
+  overflow: hidden;
+  width: 100%;
+}
+
+/* * El track: flex sin wrap, se anima continuamente hacia la izquierda */
+.slider-track {
+  display: flex;
+  gap: 0; /* ? Usamos flexbox para alinear todas las fotos en horizontal */
+  width: max-content;
+  /* * Llama al keyframe para mover todo a una velocidad constante (linear) y repetirlo infinito */
+  animation: infiniteSlide 22s linear infinite;
+
+  /* ! Optimizaciones de Rendimiento:
+   * ? will-change prepara al renderizador para transformaciones y 
+   * ? translate3d(0,0,0) fuerza usar la Tarjeta Gráfica y evita frames en blanco al inicio 
+   */
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+/* ? Al pasar el ratón se pausa la animación */
+.slider-track:hover {
+  animation-play-state: paused;
+}
+
+/* * Cada imagen ocupa todo el ancho de pantalla en móvil */
+.gallery-item {
+  /* * En móvil: imágenes más pequeñas y apaisadas */
+  width: 260px;
+  height: 200px;
+  margin-right: 1rem;
+  object-fit: cover;
+  border-radius: 12px;
+  flex-shrink: 0;
+  display: block;
+}
+
+/* * Keyframe: mueve desde el inicio hasta justo donde empieza el duplicado.
+ * * Al reiniciar desde 0 la imagen es idéntica → loop invisible.
+ */
+@keyframes infiniteSlide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ===========================================================
+ * * SECCIÓN RECETAS / FEATURES — BASE MÓVIL
+ * * En móvil las tarjetas se apilan verticalmente.
+ * =========================================================== */
+.recipes-intro {
+  /* * Padding vertical reducido en móvil */
+  padding: 3rem 1rem;
+  text-align: center;
+  max-width: 100%;
+  margin: 0 auto;
+  background-color: #f9f5f0; /* * Contraste sutil con las tarjetas blancas */
+}
+
+.section-tag {
+  display: inline-block;
+  background-color: var(--primary-color);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 6px 18px;
+  border-radius: 50px;
+  margin-bottom: 1rem;
+}
+
+.recipes-intro h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 5vw, 2.8rem);
+  margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+  font-size: 1.1rem;
+  color: var(--secondary-text-color);
+  margin-bottom: 3rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.recipe-features {
+  display: flex;
+  /* * En móvil: columna única */
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.feature-item {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1.75rem 1.25rem;
+  /* * En móvil: tarjeta de ancho completo */
+  width: 100%;
+  max-width: 400px;
+  transition:
+    box-shadow var(--transition),
+    transform var(--transition);
+}
+
+/* ? Efecto de elevación al pasar el mouse */
+.feature-item:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  transform: translateY(-4px);
+}
+
+.feature-icon {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin: 0 auto 1.5rem;
+  border-radius: 0;
+}
+
+.feature-item h3 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.feature-item p {
+  color: var(--secondary-text-color);
+  font-size: 0.9rem;
+}
+
+/* ===========================================================
+ * * SECCIÓN TESTIMONIOS — BASE MÓVIL
+ * =========================================================== */
+.testimonials {
+  background-color: #f3e9d4;
+  /* * Padding vertical reducido en móvil */
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.testimonials h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 5vw, 2.5rem);
+  margin-bottom: 2rem;
+}
+
+.testimonial-grid {
+  display: flex;
+  /* * En móvil: columna única */
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.testimonial-card {
+  background-color: var(--card-bg);
+  border-radius: 16px;
+  padding: 1.5rem;
+  /* * En móvil: tarjeta de ancho completo */
+  width: 100%;
+  max-width: 420px;
+  text-align: left;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.stars {
+  color: #f4c542;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  margin-bottom: 0.75rem;
+}
+
+.testimonial-text {
+  font-size: 0.95rem;
+  color: var(--secondary-text-color);
+  font-style: italic;
+  margin-bottom: 1.25rem;
+  line-height: 1.7;
+}
+
+/* * Footer de la tarjeta con avatar + nombre */
+.testimonial-card footer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.avatar-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-info strong {
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+.user-info span {
+  font-size: 0.8rem;
+  color: var(--secondary-text-color);
+}
+
+/* ===========================================================
+ * * BOTONES ADICIONALES (RECETAS)
+ * =========================================================== */
+.recipes-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+}
+
+.cta-button-outline {
+  display: inline-block;
+  border-radius: 50px;
+  padding: 12px 28px;
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition);
+  border: 1px solid var(--border-color);
+  background-color: transparent;
+  color: var(--text-color);
+}
+.cta-button-outline:hover {
+  border-color: var(--text-color);
+  transform: translateY(-2px);
+}
+
+.cta-link {
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-color);
+  transition: color var(--transition);
+}
+.cta-link:hover {
+  color: var(--primary-color);
+}
+
+/* ===========================================================
+ * * SECCIÓN FAQ — BASE MÓVIL
+ * =========================================================== */
+.faq-section {
+  padding: 4rem 1.5rem;
+  background-color: #f9f5f0; /* * Distinto del blanco, crea bloque visual */
+}
+
+.faq-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.faq-header {
+  margin-bottom: 3rem;
+}
+
+.faq-header h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+}
+
+.faq-header p {
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.faq-item h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+
+.faq-item p {
+  color: var(--text-color);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.faq-footer {
+  text-align: left;
+}
+.faq-footer h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  margin-bottom: 0.5rem;
+}
+.faq-footer p {
+  margin-bottom: 1.5rem;
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+/* ===========================================================
+ * * FOOTER MODERNO — BASE MÓVIL
+ * =========================================================== */
+.main-footer {
+  background-color: #eaddc5; /* * Tono tierra cálido para el cierre */
+  color: var(--text-color);
+  padding: 4rem 1.5rem 2rem;
+  border-top: 1px solid var(--border-color);
+  margin-top: auto;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-top {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 3rem;
+  margin-bottom: 3rem;
+  justify-content: space-between;
+}
+
+.footer-newsletter {
+  flex: 1 1 280px;
+  max-width: 400px;
+}
+
+.footer-logo-img {
+  max-width: 100px;
+}
+
+.newsletter-desc {
+  font-weight: 600;
+  margin: 1.5rem 0;
+  font-size: 1.05rem;
+}
+
+.newsletter-form {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.newsletter-form input {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  background-color: #f7f7f7;
+  border-radius: 8px;
+  font-family: var(--font-main);
+  outline: none;
+  width: 100%;
+}
+
+.newsletter-form input:focus {
+  box-shadow: 0 0 0 2px var(--border-color);
+}
+
+.privacy-note {
+  font-size: 0.75rem;
+  color: var(--secondary-text-color);
+  line-height: 1.4;
+}
+
+.footer-links-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 2rem;
+  flex: 1 1 180px;
+}
+
+.footer-col h4 {
+  font-family: var(--font-main);
+  font-size: 1.05rem;
+  margin-bottom: 1.25rem;
+}
+
+.footer-col ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.footer-col a {
+  font-size: 0.95rem;
+  color: var(--text-color);
+  font-weight: 500;
+  transition: color var(--transition);
+}
+
+.footer-col a:hover {
+  color: var(--primary-color);
+}
+
+.footer-disclaimer {
+  max-width: 800px;
+  margin-bottom: 2rem;
+}
+
+.footer-disclaimer p {
+  font-size: 0.8rem;
+  color: var(--secondary-text-color);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.footer-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-top: 1px solid var(--border-color);
+  padding-top: 2rem;
+  font-size: 0.9rem;
+  color: var(--text-color);
+  text-align: left;
+}
+
+.legal-links {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.legal-links a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.legal-links a:hover {
+  color: var(--primary-color);
+}
+
+/* Modificación PC de Footer */
+@media (min-width: 900px) {
+  .footer-top {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 4rem;
+  }
+
+  .footer-bottom {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+/* ===========================================================
+ * * RESPONSIVE — DESKTOP (1300px en adelante)
+ * ! Breakpoint Mobile First:
+ * ? Esto significa que el código superior es para móvil (CSS por defecto),
+ * ? y a partir de 1300px de ancho, estas reglas DE SOBRESCRITURA 
+ * ? aplican para la configuración final de ordenadores.
+ * =========================================================== */
+@media (min-width: 1300px) {
+  /* * Variables actualizadas para desktop */
+  :root {
+    --header-height: 80px;
+  }
+
+  /* --- Header --- */
+  .main-header {
+    padding: 0 2rem;
+  }
+
+  .logo {
+    /* * Flex 1 garantiza que el logo tome el mismo ancho que las acciones
+     * * para que el navbar del medio quede perfectamente centrado */
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .logo img {
+    /* * Aumentamos el tamaño del logo considerablemente */
+    max-width: 130px;
+  }
+
+  .logo-text {
+    /* * Aumentamos la tipografía del nombre de la marca */
+    font-size: 1.45rem;
+  }
+
+  /* ! Mostramos la navegación en desktop y la centramos */
+  .navbar {
+    display: flex;
+    justify-content: center;
+    position: static; /* Vital para que el mega menu se posicione vs el header */
+    height: 100%;
+    background-color: transparent; /* Reset de móvil */
+    padding: 0; /* Reset de móvil */
+    border-top: none; /* Reset de móvil */
+    box-shadow: none; /* Reset de móvil */
+    width: auto; /* Reset de móvil */
+    visibility: visible; /* Reset de animación móvil */
+    opacity: 1; /* Reset de animación móvil */
+    transform: none; /* Reset de animación móvil */
+  }
+
+  .nav-links {
+    flex-direction: row;
+    gap: 2rem;
+    height: 100%;
+  }
+
+  /* * Hacemos que el li sea el contenedor de espacio, no el a.
+   *   Así el underline (::after) no estará abajo en el footer del header.
+   */
+  .nav-links li {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+  .nav-links a {
+    padding: 4px 0; /* Volvemos a su padding normal */
+    font-size: 0.95rem; /* Reset de móvil */
+    color: var(--text-color); /* Reset de móvil */
+  }
+
+  /* ! Mantenemos el estado "hover" o presionado si el mouse sigue dentro del menú 
+   * (ej. en el dropdown del Mega Menú) */
+  .nav-links li:hover > a,
+  .nav-links li:focus-within > a,
+  .nav-links a:hover {
+    color: var(--primary-color); /* Reset de móvil */
+  }
+
+  .nav-links li:hover > a::after,
+  .nav-links li:focus-within > a::after {
+    width: 100%;
+  }
+
+  /* ! Ocultamos el hamburger en desktop */
+  .hamburger {
+    display: none;
+  }
+
+  /* * Contenedor de acciones a la derecha */
+  .nav-actions {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  /* * Mostramos el botón de contacto en desktop */
+  .desktop-only {
+    display: inline-block;
+  }
+
+  /* =======================================================
+   * * MEGA MENÚ (Desktop 1300px+)
+   * ======================================================= */
+  .mobile-only-menu {
+    display: none !important;
+  }
+
+  .mega-dropdown {
+    position: static; /* Permite posicionar el submenú relativo al Header */
+  }
+
+  .mega-menu.desktop-only-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--bg-color);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    padding: 2rem 0;
+    z-index: 200;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .mega-dropdown:hover .mega-menu.desktop-only-menu,
+  .mega-dropdown:focus-within .mega-menu.desktop-only-menu {
+    display: block !important;
+    animation: fadeDropdown 0.3s ease;
+  }
+
+  /* Contenedor centrado para Grid + Sidebar */
+  .mega-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    gap: 3rem;
+  }
+
+  /* Columna Izquierda (Sidebar) */
+  .mega-sidebar {
+    flex: 0 0 160px;
+    border-right: 1px solid var(--border-color);
+  }
+
+  .mega-sidebar ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 0;
+    margin: 0;
+  }
+
+  .mega-sidebar a {
+    font-family: var(--font-main);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-color);
+    transition: color var(--transition);
+  }
+
+  .mega-sidebar a:hover {
+    color: var(--primary-color);
+  }
+
+  /* Área de Contenido (Lado Derecho / 2x3) */
+  .mega-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 2rem;
+    row-gap: 1.5rem;
+  }
+
+  /* Componente Card */
+  .mega-card {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .mega-img {
+    width: 90px;
+    height: 70px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .mega-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .mega-info h4 {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    color: var(--text-color);
+    margin: 0;
+  }
+
+  .mega-info p {
+    font-family: var(--font-main);
+    font-size: 0.8rem;
+    color: var(--secondary-text-color);
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  .mega-link {
+    font-family: var(--font-main);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-color);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    margin-top: 0.2rem;
+    transition: color var(--transition);
+  }
+
+  .mega-link:hover {
+    color: var(--primary-color);
+  }
+
+  /* --- Botones --- */
+  .cta-button,
+  .cta-button-secondary {
+    padding: 12px 28px;
+  }
+
+  /* --- Hero --- */
+  .hero {
+    padding: 5rem 1.5rem;
+  }
+
+  .hero-content {
+    max-width: 760px;
+  }
+
+  .hero-content p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+  }
+
+  .hero-buttons {
+    gap: 1rem;
+  }
+
+  /* --- Galería / Slider --- */
+  .gallery {
+    padding: 3rem 0;
+  }
+
+  .gallery-item {
+    width: 360px;
+    height: 280px;
+    margin-right: 1.5rem;
+    border-radius: 16px;
+  }
+
+  /* --- Recetas / Features --- */
+  .recipes-intro {
+    padding: 5rem 2rem;
+    max-width: 1100px;
+  }
+
+  .recipes-intro h2 {
+    margin-bottom: 3rem;
+  }
+
+  .recipe-features {
+    /* * En desktop: fila de tarjetas en horizontal */
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+
+  .feature-item {
+    padding: 2rem 1.5rem;
+    max-width: 280px;
+    /* * Cada tarjeta crece/encoge equitativamente */
+    flex: 1 1 220px;
+    width: auto;
+  }
+
+  .feature-icon {
+    width: 110px;
+    height: 110px;
+  }
+
+  /* --- FAQ --- */
+  .faq-grid {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 4rem;
+    row-gap: 3rem;
+  }
+
+  /* --- Testimonios --- */
+  .testimonials {
+    padding: 5rem 2rem;
+  }
+
+  .testimonials h2 {
+    margin-bottom: 3rem;
+  }
+
+  .testimonial-grid {
+    /* * En desktop: fila de tarjetas en horizontal */
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    max-width: 1100px;
+  }
+
+  .testimonial-card {
+    padding: 2rem;
+    max-width: 360px;
+    /* * Cada tarjeta crece/encoge equitativamente */
+    flex: 1 1 280px;
+    width: auto;
+  }
+
+  .avatar-img {
+    width: 48px;
+    height: 48px;
+  }
+
+  /* --- Footer --- */
+  .main-footer {
+    padding: 1.5rem 2rem;
+  }
+}
+
+/* ===========================================================
+ * * ELEMENTOS DE FORMULARIO MEJORADOS (Diseño moderno)
+ * =========================================================== */
+.vertical-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: opacity var(--transition);
+}
+
+.option-item:hover {
+  opacity: 0.8;
+}
+
+.option-item input[type="radio"],
+.option-item input[type="checkbox"] {
+  cursor: pointer;
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--primary-color);
+}
+
+/* ===========================================================
+ * * CHECKBOX HACK AVANZADO (Mostrar/Ocultar Campo en Formulario)
+ * ? Técnica: Usar combinador general de hermanos (~) para mostrar 
+ * ? un div (.hidden-feedback-box) solo si un radio (#radio-no) está :checked.
+ * =========================================================== */
+.hidden-feedback-box {
+  display: none; /* ! Oculto por defecto */
+  margin-top: 1.5rem;
+  padding-left: 1rem;
+  border-left: 3px solid var(--primary-color);
+  animation: fadeIn 0.4s ease-out;
+}
+
+.hidden-feedback-box label {
+  color: var(--primary-color);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* * La Magia: Si el .radio-hack-group *contiene* el input con id nav-no :checked,
+ * * mostramos el .hidden-feedback-box en su interior usando el selector :has() */
+.radio-hack-group:has(input#nav-no:checked) .hidden-feedback-box {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===========================================================
+ * * DISEÑO MÓDULO CONTACTO: FORMULARIO MEJORADO Y CENTRADO
+ * =========================================================== */
+.contact-main {
+  background-color: var(--bg-color);
+  padding: 4rem 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 800px;
+  background-color: var(--card-bg);
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-color);
+}
+
+.form-container h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 2.5rem);
+  color: var(--primary-color);
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.form-container p {
+  text-align: center;
+  color: var(--secondary-text-color);
+  margin-bottom: 2.5rem;
+  font-size: 1.1rem;
+}
+
+.form-section {
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem 1.5rem 2rem;
+  margin-bottom: 2rem;
+  background-color: #fcfbfa; /* Leve distinción del fondo blanco original */
+}
+
+.form-section legend {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-color);
+  background-color: var(--card-bg);
+  padding: 0.25rem 1rem;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  margin-left: -0.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+}
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-group label,
+.form-group p {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="number"],
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-family: var(--font-main);
+  background-color: var(--card-bg);
+  transition: all var(--transition);
+  font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(222, 60, 24, 0.15); /* Haló naranja Sabor Binacional */
+}
+
+/* Pseudo-clases para validación en tiempo real (Feedback de colores) */
+.form-group input:not(:placeholder-shown):invalid {
+  border-color: #dc3545; /* Rojo de error */
+  background-color: #fff8f8;
+}
+
+.form-group input:not(:placeholder-shown):valid {
+  border-color: #28a745; /* Verde de acierto */
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 600px) {
+  .form-actions {
+    flex-direction: column;
+  }
+  .form-actions button {
+    width: 100%;
+  }
+  .form-container {
+    padding: 1.5rem;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+  }
+  .form-section {
+    padding: 1rem;
+  }
+}
+
+/* ===========================================================
+ * * MENÚ LATERAL DE PLATOS (Sticky Sidebar)
+ * =========================================================== */
+.menu-layout-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 1300px;
+  margin: 0 auto;
+  gap: 2rem;
+  padding: 2rem 1.5rem;
+}
+
+/* Oculto en móvil por defecto para priorizar contenido */
+.side-nav {
+  display: none;
+}
+
+.dishes-content {
+  flex: 1;
+}
+
+/* scroll-margin para evitar que el header solape el título al saltar */
+.dishes-content section {
+  scroll-margin-top: 100px;
+}
+
+@media (min-width: 1024px) {
+  .menu-layout-container {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .side-nav {
+    display: block;
+    flex: 0 0 260px;
+    position: sticky;
+    top: 100px;
+    background-color: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  }
+
+  .side-nav h3 {
+    font-family: var(--font-display);
+    color: var(--primary-color);
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+    font-size: 1.35rem;
+  }
+
+  .side-nav ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .side-link {
+    font-size: 1.05rem;
+    color: var(--secondary-text-color);
+    transition: all var(--transition);
+    display: block;
+    padding: 0.6rem 0.8rem;
+    border-radius: 8px;
+    font-weight: 500;
+  }
+
+  .side-link:hover {
+    color: var(--primary-color);
+    background-color: #fff8f6;
+    transform: translateX(4px);
+  }
+}
+
+/* ===========================================================
+ * * HOJA DE RUTA (Mapa del Sitio)
+ * =========================================================== */
+.hoja-ruta-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem 8rem;
+}
+
+.map-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.map-header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.map-header p {
+  font-size: 1.2rem;
+  color: var(--secondary-text-color);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.map-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.map-card {
+  background-color: var(--card-bg);
+  padding: 2rem;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition);
+}
+
+.map-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.map-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.map-card ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.map-card a {
+  color: var(--secondary-text-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--transition);
+  display: inline-block;
+}
+
+.map-card a:hover {
+  color: var(--primary-color);
+}
+
+/* ===========================================================
+ * * GLOSARIO (Hablando en Plata)
+ * =========================================================== */
+.glosario-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem 8rem;
+}
+
+.glosario-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.glosario-header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.glosario-header p {
+  font-size: 1.2rem;
+  color: var(--secondary-text-color);
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+.glosario-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.glosario-card {
+  background-color: var(--card-bg);
+  padding: 2rem;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: transform var(--transition);
+}
+
+.glosario-card:hover {
+  transform: translateX(10px);
+  border-color: var(--primary-color);
+}
+
+.glosario-title {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.glosario-title h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.glosario-country-tag {
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tag-ve {
+  background-color: rgba(254, 203, 0, 0.15); /* Amarillo venezuela aprox */
+  color: #c99a00;
+}
+
+.tag-co {
+  background-color: rgba(0, 56, 147, 0.1); /* Azul colombia aprox */
+  color: #003893;
+}
+
+.glosario-desc {
+  font-size: 1.1rem;
+  color: var(--secondary-text-color);
+  line-height: 1.6;
+}
+
+.glosario-desc strong {
+  color: var(--primary-color);
+}
+/* ===========================================================
+ * * ANIMACIONES ADICIONALES (Requisito Opcional)
+ * ! 1. Fade-In para títulos y secciones
+ * ! 2. Pulse para botones CTA
+ * ! 3. Float para imágenes destacadas
+ * ! 4. Slider Infinito (ya implementado arriba)
+ * =========================================================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(192, 57, 43, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(192, 57, 43, 0);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* Aplicación de animaciones */
+.fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+.pulse-animation {
+  animation: pulse 2s infinite;
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Animación para el menú lateral al aparecer */
+.side-nav {
+  animation: fadeIn 0.5s ease-out;
+}
